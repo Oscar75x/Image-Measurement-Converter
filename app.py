@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import easyocr
 import re
+import numpy as np
 
 st.title("📏 Measurement Extractor & Converter")
 st.write("Upload an image with measurements (e.g., 2' 3-1/2\") to convert them to decimal feet.")
@@ -35,7 +36,9 @@ if uploaded_file:
     st.image(image, caption="Uploaded Image", use_column_width=True)
 
     with st.spinner("Extracting text..."):
-        result = reader.readtext(image)
+        # Convert PIL image to numpy array for EasyOCR
+        image_np = np.array(image)
+        result = reader.readtext(image_np)
         combined_text = " ".join([item[1] for item in result])
         results = parse_and_convert(combined_text)
 
